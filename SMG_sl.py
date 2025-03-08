@@ -74,7 +74,7 @@ plt.style.use("dark_background")                                                
 fig, ax=plt.subplots(figsize=(12, 8))                                                                                         #
 if Show_RSI:                                                                                                                  #  secondary y axis for RSI
     ax2=ax.twinx()                                                                                                            #
-ax.grid(True, linestyle="dotted", linewidth=0.5, alpha=0.6, color="white")                                                    #
+ax.grid(True, linestyle="dotted", linewidth=0.5, alpha=0.2, color="white")                                                    #
 period=data.index.max() - pd.Timedelta(days=days)                                                                             #  this makes it so that i see only the last 30 days on the graph
 ax.plot(data.loc[period:, "Close"], label='Close Price', color='green', alpha=0.7)                                            #  to plot the actual stock price in case u want to
 ax.plot(data.loc[period:].index, data.loc[period:, "short_EMA"], label="Short EMA", color="red")                              #  plot long and short EMAs
