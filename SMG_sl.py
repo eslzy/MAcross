@@ -70,11 +70,11 @@ if Show_RSI:                                                          #  here it
 
 #graph related
 #-----------------------------------------------------------------------------------------------------------------------------#
-plt.style.use("seaborn-v0_8")                                                                                                 #
+plt.style.use("dark_background")                                                                                              #
 fig, ax=plt.subplots(figsize=(12, 8))                                                                                         #
 if Show_RSI:                                                                                                                  #  secondary y axis for RSI
     ax2=ax.twinx()                                                                                                            #
-                                                                                                                              #
+ax.grid(True, linestyle="dotted", linewidth=0.5, alpha=0.6, color="white")                                                    #
 period=data.index.max() - pd.Timedelta(days=days)                                                                             #  this makes it so that i see only the last 30 days on the graph
 ax.plot(data.loc[period:, "Close"], label='Close Price', color='green', alpha=0.7)                                            #  to plot the actual stock price in case u want to
 ax.plot(data.loc[period:].index, data.loc[period:, "short_EMA"], label="Short EMA", color="red")                              #  plot long and short EMAs
@@ -84,17 +84,17 @@ ax.scatter(buy_signals.loc[period:].index, buy_signals.loc[period:, "short_EMA"]
            marker="^", color="green", s=150, label="Buy Signal", alpha=0.8, zorder=4)                                         #  # i added z order bc it puts the signals above other lines, just better
 ax.scatter(sell_signals.loc[period:].index, sell_signals.loc[period:, "short_EMA"],                                           #  this gives an down arrow to signal a sell on graph
            marker="v", color="red", s=150, label="Sell Signal", alpha=0.8, zorder=4)                                          #
-ax.set_ylabel("Price", fontsize=14)                                                                                           #
+ax.set_ylabel("Price", fontsize=14, fontweight="bold")                                                                        #
                                                                                                                               # 
 if Show_RSI:                                                                                                                  #  all the secondary graph shit we have to do in condition obviously in case rsi is turned off 
     ax2.plot(data.loc[period:].index, data.loc[period:, "RSI"], label="RSI", color="purple", linestyle="dashed", alpha=0.4)   #  this graphs the RSI o, the secondary y axis
-    ax2.axhline(70, color="black", linestyle="dotted", alpha=0.5, label="Overbought (70)")                                    #  this creates a line on the 70 mark of secondary y axis, cool technique
-    ax2.axhline(30, color="black", linestyle="dotted", alpha=0.5, label="Oversold (30)")                                      #  same but for 30
+    ax2.axhline(70, color="white", linestyle="dotted", alpha=0.5, label="Overbought (70)")                                    #  this creates a line on the 70 mark of secondary y axis, cool technique
+    ax2.axhline(30, color="white", linestyle="dotted", alpha=0.5, label="Oversold (30)")                                      #  same but for 30
     ax2.legend(loc="upper right")                                                                                             #
-    ax2.set_ylabel("RSI", fontsize=14)                                                                                        # didnt have this in the OG but it j anotates the y axis
+    ax2.set_ylabel("RSI", fontsize=14, fontweight="bold")                                                                     # didnt have this in the OG but it j anotates the y axis
     ax2.grid(False)                                                                                                           #  to remove the grid of second graph, looks weird otherwise
                                                                                                                               #
-ax.set_title(ticker, fontsize=16)                                                                                             #
+ax.set_title(ticker, fontsize=16, fontweight="bold")                                                                          #
 ax.legend(loc="upper left")                                                                                                   #
 st.pyplot(fig)                                                                                                                #  here it replaces the plt.show() ig it does the same but in the app
                                                                                                                               #
