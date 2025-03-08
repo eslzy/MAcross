@@ -36,22 +36,22 @@ data = apple[["Close"]].copy()
 
 
 #creation of MA, position, and volume check
-#-----------------------------------------------------------------------#
-data["short_EMA"]=data.ewm(span=SEMA, adjust=False).mean()              #  create a column for a short ma and a long one,basically we want to compare them, if the long is higher than the short you should go long and vice versa
-data["long_EMA"]=data.Close.ewm(span=LEMA, adjust=False).mean()         #  btw, the MAs are set in hours since the download intervals are set in hours so this is a 9/21 open market hour split
-                                                                        #
-data.dropna(inplace=True)                                               #
-                                                                        #
-data["position"]=np.where(data["short_EMA"] > data["long_EMA"], 1, -1)  #  here we make a column that decides if we go long (1) or short(-1)
-data["Crossover"]=data["position"].diff(periods=1)                      #
-data["Crossover"] = data["Crossover"].replace({2: "Buy", -2: "Sell"})   #
-buy_signals=data[data["Crossover"]=="Buy"]                              #  When short EMA crosses above long EMA
-sell_signals=data[data["Crossover"]=="Sell"]                            #  When long EMA crosses above short EMA
-                                                                        # 
-data["Volume"] = apple["Volume"]                                        #  Volume refers to the total number of shares traded during a given time period, we dont have to create the column, its included automatically
-data["Vol_MA"] = data["Volume"].rolling(15, min_periods=1).mean()       #  low volume makes the data less reliable (in teh way a low sample size would skew results), so we calculate the moving average of teh volume and we want the current to be above it.
-data["Valid_Signal"] = data["Volume"] >= data["Vol_MA"]                 #  if true then signal is trustworthy, if false its less reliable
-#-----------------------------------------------------------------------#
+#------------------------------------------------------------------------------------#
+data["short_EMA"]=data.ewm(span=SEMA, adjust=False).mean()                           #  create a column for a short ma and a long one,basically we want to compare them, if the long is higher than the short you should go long and vice versa
+data["long_EMA"]=data.Close.ewm(span=LEMA, adjust=False).mean()                      #  btw, the MAs are set in hours since the download intervals are set in hours so this is a 9/21 open market hour split
+                                                                                     #
+data.dropna(inplace=True)                                                            #
+                                                                                     #
+data["position"]=np.where(data["short_EMA"] > data["long_EMA"], 1, -1)               #  here we make a column that decides if we go long (1) or short(-1)
+data["Crossover"]=data["position"].diff(periods=1)                                   #
+data["Crossover"]=data["Crossover"].replace({2: "Buy", -2: "Sell", 0: "No cross"})   #
+buy_signals=data[data["Crossover"]=="Buy"]                                           #  When short EMA crosses above long EMA
+sell_signals=data[data["Crossover"]=="Sell"]                                         #  When long EMA crosses above short EMA
+                                                                                     # 
+data["Volume"] = apple["Volume"]                                                     #  Volume refers to the total number of shares traded during a given time period, we dont have to create the column, its included automatically
+data["Vol_MA"] = data["Volume"].rolling(15, min_periods=1).mean()                    #  low volume makes the data less reliable (in teh way a low sample size would skew results), so we calculate the moving average of teh volume and we want the current to be above it.
+data["Valid_Signal"] = data["Volume"] >= data["Vol_MA"]                              #  if true then signal is trustworthy, if false its less reliable
+#------------------------------------------------------------------------------------#
 
 
 #RSI related
@@ -102,5 +102,3 @@ st.pyplot(fig)                                                                  
 st.write("### Trading Data Table")                                                                                            #  here the more ### you put, the larger the smaller teh text will appear 
 st.dataframe(data.loc[:, ["Close", "Crossover", "Valid_Signal", "Volume"]].tail(tail))                                        #  same here, it replaces the print command for the website
 #-----------------------------------------------------------------------------------------------------------------------------#
-
-#streamlit run "C:\Users\eliot\OneDrive\Desktop\travail\UCL\ALGO\streamlit_SMG_app\SMG_sl.py"
