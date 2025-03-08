@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-#EMAcrossover and RSI are two independent signals, a crossover is a signal to trade and the rsi is a signal of a trend reversal, combined, these two signals work well with each other. the volume check is also independant as a signal but only serves to check the reliability of te other signals
+#EMACrossover and RSI are two independent signals, a Crossover is a signal to trade and the rsi is a signal of a trend reversal, combined, these two signals work well with each other. the volume check is also independant as a signal but only serves to check the reliability of te other signals
 
 st.title("EMA Crossover Trading Strategy")  # st title
 
@@ -43,13 +43,14 @@ data["long_EMA"]=data.Close.ewm(span=LEMA, adjust=False).mean()         #  btw, 
 data.dropna(inplace=True)                                               #
                                                                         #
 data["position"]=np.where(data["short_EMA"] > data["long_EMA"], 1, -1)  #  here we make a column that decides if we go long (1) or short(-1)
-data["crossover"]=data["position"].diff(periods=1)                      #
-buy_signals=data[data["crossover"]==2]                                  #  When short EMA crosses above long EMA
-sell_signals=data[data["crossover"]==-2]                                #  When long EMA crosses above short EMA
+data["Crossover"]=data["position"].diff(periods=1)                      #
+data["Crossover"] = data["Crossover"].replace({2: "Buy", -2: "Sell"})   #
+buy_signals=data[data["Crossover"]=="Buy"]                              #  When short EMA crosses above long EMA
+sell_signals=data[data["Crossover"]=="Sell"]                            #  When long EMA crosses above short EMA
                                                                         # 
 data["Volume"] = apple["Volume"]                                        #  Volume refers to the total number of shares traded during a given time period, we dont have to create the column, its included automatically
-data["vol_MA"] = data["Volume"].rolling(15, min_periods=1).mean()       #  low volume makes the data less reliable (in teh way a low sample size would skew results), so we calculate the moving average of teh volume and we want the current to be above it.
-data["valid_signal"] = data["Volume"] >= data["vol_MA"]                 #  if true then signal is trustworthy, if false its less reliable
+data["Vol_MA"] = data["Volume"].rolling(15, min_periods=1).mean()       #  low volume makes the data less reliable (in teh way a low sample size would skew results), so we calculate the moving average of teh volume and we want the current to be above it.
+data["Valid_Signal"] = data["Volume"] >= data["Vol_MA"]                 #  if true then signal is trustworthy, if false its less reliable
 #-----------------------------------------------------------------------#
 
 
@@ -99,7 +100,7 @@ ax.legend(loc="upper left")                                                     
 st.pyplot(fig)                                                                                                                #  here it replaces the plt.show() ig it does the same but in the app
                                                                                                                               #
 st.write("### Trading Data Table")                                                                                            #  here the more ### you put, the larger the smaller teh text will appear 
-st.dataframe(data.loc[:, ["Close", "crossover", "valid_signal", "Volume"]].tail(tail))                                        #  same here, it replaces the print command for the website
+st.dataframe(data.loc[:, ["Close", "Crossover", "Valid_Signal", "Volume"]].tail(tail))                                        #  same here, it replaces the print command for the website
 #-----------------------------------------------------------------------------------------------------------------------------#
 
 #streamlit run "C:\Users\eliot\OneDrive\Desktop\travail\UCL\ALGO\streamlit_SMG_app\SMG_sl.py"
