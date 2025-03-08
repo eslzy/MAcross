@@ -18,8 +18,8 @@ tail= 10
 #-----------------------------------------------------------------------------------------------------#
 with st.sidebar:                                                                                      # this puts the below on the side bar as opposed to on teh main page which i like, you could also j use x=st.sidebar.input... using with st.sidebar it applies to all so its easier 
     ticker= st.text_input("Stock Ticker:", "AAPL").upper()                                            #
-    Show_RSI= st.checkbox("Show RSI")                                                                 #
     days= st.number_input("Number of days:", min_value=10, max_value=200, value=70) # st inputs       #
+    Show_RSI= st.checkbox("Show RSI")
     expand_adsets= st.checkbox("Advanced Settings")                                                   #
                                                                                                       #
 if expand_adsets:                                                                                     #
@@ -81,9 +81,9 @@ ax.plot(data.loc[period:].index, data.loc[period:, "short_EMA"], label="Short EM
 ax.plot(data.loc[period:].index, data.loc[period:, "long_EMA"], label="Long EMA", color="blue")                               #
                                                                                                                               #
 ax.scatter(buy_signals.loc[period:].index, buy_signals.loc[period:, "short_EMA"],                                             #  this gives an up arrow to signal a buy on graph
-           marker="^", color="green", s=150, label="Buy Signal", alpha=0.8, zorder=4)                                         #  # i added z order bc it puts the signals above other lines, just better
+           marker="^", color="green", s=150, label="Buy Signal", alpha=0.8, zorder=4, edgecolor="white")                      #  i added z order bc it puts the signals above other lines, just better
 ax.scatter(sell_signals.loc[period:].index, sell_signals.loc[period:, "short_EMA"],                                           #  this gives an down arrow to signal a sell on graph
-           marker="v", color="red", s=150, label="Sell Signal", alpha=0.8, zorder=4)                                          #
+           marker="v", color="red", s=150, label="Sell Signal", alpha=0.8, zorder=4, edgecolor="white")                       #
 ax.set_ylabel("Price", fontsize=14, fontweight="bold")                                                                        #
                                                                                                                               # 
 if Show_RSI:                                                                                                                  #  all the secondary graph shit we have to do in condition obviously in case rsi is turned off 
